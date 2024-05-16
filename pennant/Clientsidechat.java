@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.concurrent.Executors;
 
 public class Clientsidechat extends Frame {
-    private static final String SERVER_ADDRESS = "localhost";
+    private String serverAddress;
     public int port;
     private TextArea chatArea;
     private TextField inputField;
@@ -15,8 +15,9 @@ public class Clientsidechat extends Frame {
     private Socket socket;
     private String clientName;
 
-    public Clientsidechat(String name,int port) {
+    public Clientsidechat(String name,int port, String serverAddress) {
         super("Chat Client - " + name);
+        this.serverAddress=serverAddress;
         this.clientName = name;
         this.port=port;
 
@@ -103,7 +104,7 @@ public class Clientsidechat extends Frame {
 
     private void connectToServer() {
         try {
-            socket = new Socket(SERVER_ADDRESS, port);
+            socket = new Socket(serverAddress, port);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -137,12 +138,13 @@ public class Clientsidechat extends Frame {
     }
 
     public static void main(String[] args) {
-        if (args.length != 2) {
+        if (args.length != 3) {
             System.out.println("Usage: java Clientsidechat <name>");
             System.exit(1);
         }
         String name=args[0];
         int SERVER_PORT = Integer.parseInt(args[1]);
-        new Clientsidechat(name,SERVER_PORT);
+        String serverip=args[2];
+        new Clientsidechat(name,SERVER_PORT,serverip);
     }
 }
